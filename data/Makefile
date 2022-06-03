@@ -1,20 +1,14 @@
-######################################################################
-# Project: TMVA - Toolkit for Multivariate Data Analysis             #
-# Code   : Example usage for TMVA analyses                           #
-###################################################################### 
 
 -include Makefile.inc
 
 
-BINS = growJetTrees \
-		FormatRawJetTrees
+BINS = GenerateJetData \
+		FormatRawJetTrees\
 
 
 CXX = g++
 CCFLAGS = $(shell root-config --cflags) #-ggdb 
 
-PYTHIA8_INCLUDE=-I/home/tmengel/pythia8307/include
-PYTHIA8_LIB=-L/home/tmengel/pythia8307/lib -Wl,-rpath,/home/tmengel/pythia8307/lib
 CXX_PYTHIA= $(PYTHIA8_INCLUDE) $(PYTHIA8_LIB) -lpythia8 -ldl
 CXX_COMMON:=-I$(PREFIX_INCLUDE) $(CXX_COMMON) $(GZIP_LIB)
 CXX_COMMON+= -L$(PREFIX_LIB) -Wl,-rpath,$(PREFIX_LIB) -ltenngen200 -ldl

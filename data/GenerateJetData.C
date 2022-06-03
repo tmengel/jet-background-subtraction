@@ -18,8 +18,7 @@ using namespace std;
 using namespace ROOT;
 
 
-const Int_t MAXPARTS = 2000;
-
+const Int_t MAXPARTS = 6000;
 Int_t nParts, nJetParts;
 Float_t constituentPt[MAXPARTS] , constituentEta[MAXPARTS] , constituentPhi[MAXPARTS] , constituentEnergy[MAXPARTS], constituentTrueIndex[MAXPARTS];
 Float_t KtPt[MAXPARTS] , KtNparts[MAXPARTS] , KtArea[MAXPARTS], KtEta[MAXPARTS], KtPhi[MAXPARTS];
@@ -31,22 +30,32 @@ Float_t ptmin,ptmax, xsec_over_eventweight;
 const Int_t nPtBins = 20;
 const Float_t pthardbin[nPtBins]= {5.,7.,8.,10.,11.,12.,15.,16.,17.,20.,21.,23.,25.,27.,30.,35.,40.,45.,50.,-1 };
 
-int growJetTrees(const Int_t nevent, const Int_t ptbin, double R, double etaRange){
+int GenerateJetData(const Int_t nevent, const Int_t ptbin, double R, double etaRange, int centbin){
 
     double ghost_maxEta = 2*R + etaRange;
     double selectorRap = etaRange;
-    double ktR= 0.4;
+    double ktR= R + 0.2;
     double ptjetmin = 5.0;
     ptbinID = ptbin;
 
     ROOT::EnableImplicitMT();
-    string datadir = "AuAu_200GeV_R0.4_0to10cent";
+    string datadir = "jet-trees-raw";
     if (mkdir(datadir.c_str(), 0777) == -1) std::cerr << "Output " << strerror(errno) << endl;
 
-    string TFOUT = datadir+"/AuAu_200GeV_R0.4_0to10cent_ptbin"+std::to_string(ptbin)+".root";
-    TFile* outFile = new TFile(TFOUT.c_str(),"RECREATE"); 
+    TString centstring, jetparamstring;
+    if(centbin == 0) centstring = "0to10";
+    else if(centbin == 1) centstring = "20to40";
+    if(R == 0.2) jetparamstring = "R02";
+    else if(R == 0.4) jetparamstring = "R04";
+
+    TString filename = datadir+"/AuAu_200GeV_"+jetparamstring+"_"+centstring+"_ptbin"+Form("%d",ptbin)+".root";
+    TFile *outFile = new TFile(filename.Data(),"RECREATE");
+
+    //string TFOUT = datadir+"/200GeV_R04_0to10cent_ptbin"+std::to_string(ptbin)+".root";
+    //TFile* outFile = new TFile(TFOUT.c_str(),"RECREATE"); 
     TTree* outTree = new TTree("JetTree", "JetTree");
-   // TTree* ktTree = new TTree("KTJetTree", "KTJetTree");
+
+    //TTree* ktTree = new TTree("KTJetTree", "KTJetTree");
     
     TTree* eventInfo = new TTree("eventInfo","eventInfo");
     eventInfo->Branch("nevent",&Events,"nevent/I");
@@ -75,7 +84,6 @@ int growJetTrees(const Int_t nevent, const Int_t ptbin, double R, double etaRang
     outTree->Branch("JetTruePt", &JetTruePt, "JetTruePt/F");
     outTree->Branch("Area", &Area, "Area/F");
     outTree->Branch("nJetParts", &nJetParts, "nJetParts/I");
-
     outTree->Branch("constituentPt", constituentPt, "constituentPt[nJetParts]/F");
     outTree->Branch("constituentEta", constituentEta, "constituentEta[nJetParts]/F");
     outTree->Branch("constituentPhi", constituentPhi, "constituentPhi[nJetParts]/F");
@@ -89,11 +97,13 @@ int growJetTrees(const Int_t nevent, const Int_t ptbin, double R, double etaRang
     settings.parm("Main:numberOfEvents", nevent);
     settings.parm("PhaseSpace:pTHatMin", pthardbin[ptbin]);
     settings.parm("PhaseSpace:pTHatMax", pthardbin[ptbin+1]);
+
     pythia.init();
 
     TennGen tg;
     tg.defaultSettings200(true);
-    tg.setcent(0);
+    if(centbin ==0) tg.setcent(0);
+    else if(centbin ==1) tg.setcent(2);
     tg.seteta(1.1);
     tg.set_Stream(true);
     TGEvent tmpEvent;
@@ -118,7 +128,7 @@ int growJetTrees(const Int_t nevent, const Int_t ptbin, double R, double etaRang
 
         calcVec.clear();
 
-        //particles.resize(0);
+        particles.resize(0);
         calcVec.resize(0);
 
         
@@ -145,11 +155,12 @@ int growJetTrees(const Int_t nevent, const Int_t ptbin, double R, double etaRang
         EventAvgPt = Event_pt/nParts;
    
         fastjet::GhostedAreaSpec area_spec(ghost_maxEta);
-        fastjet::AreaDefinition area_def(active_area_explicit_ghosts, GhostedAreaSpec(ghost_maxEta));
+        fastjet::AreaDefinition area_def(fastjet::active_area, area_spec);
+        fastjet::AreaDefinition area_def_bkgd(active_area_explicit_ghosts, GhostedAreaSpec(ghost_maxEta));
         fastjet::Selector selector = SelectorAbsRapMax(ghost_maxEta) * (!SelectorNHardest(2));
         fastjet::JetDefinition jet_def(antikt_algorithm, R);
         fastjet::JetDefinition jet_def_bkgd(kt_algorithm, 0.4);
-        fastjet::JetMedianBackgroundEstimator bge(selector, jet_def_bkgd, area_def);
+        fastjet::JetMedianBackgroundEstimator bge(selector, jet_def_bkgd, area_def_bkgd);
         bge.set_particles(particles);
         fastjet::BackgroundEstimate bkgd_estimate = bge.estimate();
 
@@ -169,7 +180,7 @@ int growJetTrees(const Int_t nevent, const Int_t ptbin, double R, double etaRang
             // KtEta[i] = jets[i].eta();
             // KtPhi[i]= jets[i].phi();
         }
-       // ktTree->Fill();
+      //  ktTree->Fill();
         
 
         sort(calcVec.begin(), calcVec.end());
@@ -182,11 +193,11 @@ int growJetTrees(const Int_t nevent, const Int_t ptbin, double R, double etaRang
 
         for(int i =0; i<nKtJets; i++){
             calcVec.push_back(jets[i].pt()/jets[i].area());
-            KtNparts[i] = 0;
-            KtArea[i]=0;
-            KtPt[i]=0;
-            KtEta[i] =0;
-            KtPhi[i] =0;
+            // KtNparts[i] = 0;
+            // KtArea[i]=0;
+            // KtPt[i]=0;
+            // KtEta[i] =0;
+            // KtPhi[i] =0;
         }
         sort(calcVec.begin(), calcVec.end());
         rhoArea = calcVec[int(calcVec.size()/2)];
@@ -204,7 +215,7 @@ int growJetTrees(const Int_t nevent, const Int_t ptbin, double R, double etaRang
         constituents.clear();
 
         for(int i = 0; i < jets.size(); i++){
-            if (abs(jets[i].eta())<=(etaRange-R)){
+            if (abs(jets[i].eta())<=etaRange){
 
                 constituents.resize(0);
                 constituents.clear();
@@ -218,14 +229,16 @@ int growJetTrees(const Int_t nevent, const Int_t ptbin, double R, double etaRang
                 nJetParts = constituents.size();
                 JetTruePt = 0;
                 for(int j = 0; j< nJetParts; j++){
-
+                 // if(constituents[j].user_index()==-1){
                     constituentPt[j] = constituents[j].pt();
                     constituentEta[j] = constituents[j].eta();
                     constituentPhi[j] = constituents[j].phi();
                     constituentTrueIndex[j] = constituents[j].user_index();
                     if(constituents[j].user_index() == 1) JetTruePt += constituents[j].pt();
                 }
-                if(JetTruePt ==0) continue;
+            
+           
+               if(JetTruePt ==0) continue;
 
                 weight = info.weight();
                 outTree->Fill(); 
@@ -256,15 +269,24 @@ int growJetTrees(const Int_t nevent, const Int_t ptbin, double R, double etaRang
     return 0;
 
 }
-int main( int argc, char** argv){
+int main(int argc, char** argv){
+
+
+     if(argc != 3){
+        cout << "Usage: ./GenerateJetData <jetparam> <centrality>" << endl;
+        return 1;
+    }
     
     int nevent = 10000;
     double etaRange = 1.1;
-    double R = 0.4;
-    if(argc >=2) nevent = atoi(argv[1]); 
+    double R = atof(argv[1]);
+    int centbin = atoi(argv[2]);
+    cout << "R = " << R << " centrality = " << centbin << endl;
+    
 
     for(int i =0; i < (nPtBins-1); i++){
-        growJetTrees(nevent,i,R,etaRange);
+    //for(int i =0; i<1; i++){
+        GenerateJetData(nevent,i,R,etaRange,centbin);
         gSystem->ProcessEvents();
     } 
     return 0;

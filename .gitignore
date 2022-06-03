@@ -1,0 +1,17 @@
+.DS_Store
+._.DS_Store
+*.root
+
+# Python
+env/
+__pycache__/
+.ipynb_checkpoints
+
+# Output
+data/jet_trees_raw
+data/Makefile.inc
+src/pre-processed-data
+
+# Data symlinks
+plotting-macros
+data/jet_trees_raw/*

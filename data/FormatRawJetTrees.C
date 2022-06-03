@@ -12,16 +12,24 @@
 using namespace ROOT; // RDataFrame lives in here
 using namespace std;
 
-int FormatRawJetTrees(TString filename)
+int FormatRawJetTrees(TString filename, TString outdir, double R, int centbin)
 {
-    Float_t R = 0.4;
+
+    TString cent, jetparam;
+    if(centbin == 0) cent = "0to10";
+    else if(centbin == 1) cent = "20to40";
+    if(R == 0.2) jetparam = "R02";
+    else if(R == 0.4) jetparam = "R04";
+    TString outRootFile = "AuAu_200GeV_"+jetparam+"_"+cent+"_ptbin";
+    TString outRootFilePath = outdir+outRootFile;
+
     string jetTree = "JetTree";
     string ktTree = "KTJetTree";
     string eventTree = "eventInfo";
 
-    string outputDir = "/home/tmengel/jetbackgroundML/MLscripts/data/jet-trees-formatted";
 
     TFile f(filename.Data());
+
     TTreeReader jettr(jetTree.c_str(), &f);
     TTreeReader weighttr(eventTree.c_str(), &f);
 
@@ -55,16 +63,19 @@ int FormatRawJetTrees(TString filename)
     weighttr.Next(); 
     ptbin = *event_pTbin; 
     eventxsec = *xsec_over_totalweight;
-    
+    TString outfile = outRootFilePath+Form("%d",ptbin)+".root";
+    TFile *fout = new TFile(outfile.Data(), "RECREATE");
+    TTree *outTree = new TTree("outTree", "outTree");
 
-    string outfile = outputDir+"/AuAu_200GeV_R0.4_0to10cent_ptbin"+to_string(ptbin)+".root";
-    TFile* fout = new TFile(outfile.c_str(),"RECREATE");
-    TTree* outTree= new TTree("outTree","outTree");
+
+    //string outfile = outputDir+"/AuAu_200GeV_R04_0to10cent_ptbin"+to_string(ptbin)+".root";
+    // TFile* fout = new TFile(outfile.c_str(),"RECREATE");
+    // TTree* outTree= new TTree("outTree","outTree");
 
     Float_t weight, scaledweight, median_pt_over_area, median_npart_over_area, fastjet_rho, event_average_pt, event_median_pt;
     Float_t jetpt, jeteta, jetphi, jetpt_pythia, jetarea;
     Int_t jetnparts, PtHardBin;
-    Float_t track0pt, track1pt, track2pt, average_track_pt, median_track_pt, jetangularity, trackptvariance,trackptskewness,trackptkurtosis;
+    Float_t track0pt, track1pt, track2pt, track3pt, track4pt, average_track_pt, median_track_pt, jetangularity, trackptvariance,trackptskewness,trackptkurtosis;
     Float_t jetpt_pythia_fraction, NumberBased, AreaBased;
 
     outTree->Branch("weight", &weight, "weight/F");
@@ -87,6 +98,8 @@ int FormatRawJetTrees(TString filename)
     outTree->Branch("track0pt", &track0pt, "track0pt/F" );
     outTree->Branch("track1pt", &track1pt, "track1pt/F" );
     outTree->Branch("track2pt", &track2pt, "track2pt/F" );
+    outTree->Branch("track3pt", &track3pt, "track3pt/F" );
+    outTree->Branch("track4pt", &track4pt, "track4pt/F" );
     outTree->Branch("average_track_pt", &average_track_pt, "average_track_pt/F");
     outTree->Branch("median_track_pt", &median_track_pt, "median_track_pt/F");
     outTree->Branch("jetangularity", &jetangularity, "jetangularity/F");
@@ -116,6 +129,8 @@ int FormatRawJetTrees(TString filename)
         track0pt = constituent_pT[0];
         track1pt = constituent_pT[1];
         track2pt = constituent_pT[2];
+        track3pt = constituent_pT[3];
+        track4pt = constituent_pT[4];
 
         average_track_pt = jetpt/jetnparts;
 
@@ -139,7 +154,7 @@ int FormatRawJetTrees(TString filename)
             if(constituent_truth_index[i] == 1.0) pttemp +=  constituent_pT[i];
         }
 
-        // sort(pToverNpart.begin(), pToverNpart.end());
+        sort(pToverNpart.begin(), pToverNpart.end());
         median_track_pt = pToverNpart[int(pToverNpart.size()/2)];
         jetpt_pythia_fraction = pttemp/jetpt;
         jetangularity = jetangularity/jetpt;
@@ -147,7 +162,7 @@ int FormatRawJetTrees(TString filename)
         trackptskewness = trackptskewness/jetnparts;
         trackptkurtosis = trackptkurtosis/jetnparts;
 
-        if(TMath::Abs(jeteta) < 1.1  && jetpt > 5.0 /* &&jetpt_pythia_fraction > 0.5*/ )outTree->Fill();
+        if(TMath::Abs(jeteta) < 1.1  && jetpt > 5.0 &&jetpt_pythia_fraction !=0 )outTree->Fill();
     }
     
     fout->Write();
@@ -157,30 +172,33 @@ int FormatRawJetTrees(TString filename)
 
 int main( int argc, char** argv){
 
-    std::vector<TString> filenames = { 
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin0.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin1.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin2.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin3.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin4.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin5.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin6.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin7.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin8.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin9.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin10.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin11.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin12.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin13.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin14.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin15.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin16.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin17.root",
-      "/home/tmengel/jetbackgroundML/MLscripts/data/AuAu_200GeV_R0.4_0to10cent/AuAu_200GeV_R0.4_0to10cent_ptbin18.root"};
-   
+    if(argc != 3){
+        cout << "Usage: ./FormatRawJetTrees <jetparam> <centrality>" << endl;
+        return 1;
+    }
+
+    double R = atof(argv[1]);
+    int centbin = atoi(argv[2]);
+    cout << "R = " << R << " centrality = " << centbin << endl;
+
     int numptbins = 19;
-    // Enable multi-threading
-    ROOT::EnableImplicitMT();
-    for(int i =0; i < 19; i++) FormatRawJetTrees(filenames[i]);
+    TString cent, jetparam;
+
+    if(centbin == 0) cent = "0to10";
+    else if(centbin == 1) cent = "20to40";
+
+    if(R == 0.2) jetparam = "R02";
+    else if(R == 0.4) jetparam = "R04";
+
+    TString fileheader = "AuAu_200GeV_"+jetparam+"_"+cent+"_ptbin";
+    TString datadir = "jet-trees-raw/";
+    TString outdir = "../src/pre-processed-data/jet-trees-formatted/";
+
+    for(int i =0; i<numptbins; i++){
+        TString filename = datadir+fileheader+Form("%d",i)+".root";   
+        cout << "Formatting: " << filename << endl;
+        FormatRawJetTrees(filename, outdir, R , centbin);
+    }
+
     return 0;
 }
