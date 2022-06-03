@@ -1,25 +1,19 @@
 # TennGen configuration file.
-# Generated on Thu 05 May 2022 12:23:36 AM EDT with the user supplied options:
-# --cxx=g++
-# --with-root-lib=/home/tmengel/root/bin
-# --with-root-lib=/home/tmengel/root/lib
-# --with-root-include=/home/tmengel/root/include
-# --with-pythia8-config=/home/tmengel/pythia8307/bin
-# --with-pythia8-lib=/home/tmengel/pythia8307/lib
-# --with-pythia8-include=/home/tmengel/pythia8307/include
-# --with-fastjet3-config=/home/tmengel/fastjet-install/bin
-# --with-fastjet3-lib=/home/tmengel/fastjet-install/lib
-# --with-fastjet3-include=/home/tmengel/fastjet-install/include
-# --prefix=/home/tmengel/tenngen-install
+# Generated on Sun May 15 13:19:22 EDT 2022 with the user supplied options:
+# --with-pythia8-config=/lustre/isaac/scratch/tmengel/jetBackgroundSubtract/external/install/pythia/bin/pythia8-config
+# --with-root-config=/nfs/home/tmengel/.conda/envs/myhepenv/bin/root-config
+# --with-fastjet3-config=/lustre/isaac/scratch/tmengel/jetBackgroundSubtract/external/install/install/bin/fastjet-config
+# --with-fastjet3-lib=/lustre/isaac/scratch/tmengel/jetBackgroundSubtract/external/install/install/lib
+# --prefix=/lustre/isaac/scratch/tmengel/jetBackgroundSubtract/external/install/tenngen
 
 # Install directory prefixes.
-PREFIX_BIN=/home/tmengel/tenngen-install/bin
-PREFIX_INCLUDE=/home/tmengel/tenngen-install/include
-PREFIX_LIB=/home/tmengel/tenngen-install/lib
-PREFIX_SHARE=/home/tmengel/tenngen-install/share/TennGen200
+PREFIX_BIN=/lustre/isaac/scratch/tmengel/jetBackgroundSubtract/external/tenngen200/bin
+PREFIX_INCLUDE=/lustre/isaac/scratch/tmengel/jetBackgroundSubtract/external/tenngen200/include
+PREFIX_LIB=/lustre/isaac/scratch/tmengel/jetBackgroundSubtract/external/tenngen200/lib
+PREFIX_SHARE=/lustre/isaac/scratch/tmengel/jetBackgroundSubtract/external/tenngen200/share/TennGen200
 
 # Compilation flags (see ./configure --help for further documentation).
-CXX=g++
+CXX=/nfs/home/tmengel/.conda/envs/myhepenv/bin/x86_64-conda-linux-gnu-c++
 CXX_COMMON=-O2 -std=c++11 -pedantic -W -Wall -Wshadow -fPIC -pthread
 CXX_SHARED=-shared
 CXX_SONAME=-Wl,-soname,
@@ -27,19 +21,19 @@ LIB_SUFFIX=.so
 OBJ_COMMON=
 
 FASTJET3_USE=true
-FASTJET3_CONFIG=/home/tmengel/fastjet-install/bin
+FASTJET3_CONFIG=/lustre/isaac/scratch/tmengel/jetBackgroundSubtract/external/install/install/bin
 FASTJET3_BIN=
-FASTJET3_INCLUDE=-I/home/tmengel/fastjet-install/include
-FASTJET3_LIB=-L/home/tmengel/fastjet-install/lib -Wl,-rpath,/home/tmengel/fastjet-install/lib -lfastjet
+FASTJET3_INCLUDE=-I/lustre/isaac/scratch/tmengel/jetBackgroundSubtract/external/install/install/include
+FASTJET3_LIB=-L/lustre/isaac/scratch/tmengel/jetBackgroundSubtract/external/install/install/lib -Wl,-rpath,/lustre/isaac/scratch/tmengel/jetBackgroundSubtract/external/install/install/lib -lfastjet
 
 ROOT_USE=true
-ROOT_CONFIG=//home/tmengel/root/bin/root-config
-ROOT_BIN=//home/tmengel/root/bin/
-ROOT_INCLUDE=-I/home/tmengel/root/include
-ROOT_LIB=-L/home/tmengel/root/lib -Wl,-rpath,/home/tmengel/root/lib -lCore
+ROOT_CONFIG=/nfs/home/tmengel/.conda/envs/myhepenv/bin/root-config
+ROOT_BIN=/nfs/home/tmengel/.conda/envs/myhepenv/bin
+ROOT_INCLUDE=-I/lustre/isaac/scratch/tmengel/.conda/envs/myhepenv/include
+ROOT_LIB=-L/lustre/isaac/scratch/tmengel/.conda/envs/myhepenv/lib -Wl,-rpath,/lustre/isaac/scratch/tmengel/.conda/envs/myhepenv/lib -lCore
 
 PYTHIA8_USE=true
-PYTHIA8_CONFIG=/home/tmengel/pythia8307/bin
-PYTHIA8_BIN=
-PYTHIA8_INCLUDE=-I/home/tmengel/pythia8307/include
-PYTHIA8_LIB=-L/home/tmengel/pythia8307/lib -Wl,-rpath,/home/tmengel/pythia8307/lib 
+PYTHIA8_CONFIG=/nfs/home/tmengel/.conda/envs/myhepenv/bin/pythia8-config
+PYTHIA8_BIN=/nfs/home/tmengel/.conda/envs/myhepenv/bin
+PYTHIA8_INCLUDE=-I/nfs/home/tmengel/.conda/envs/myhepenv/include
+PYTHIA8_LIB=-L/nfs/home/tmengel/.conda/envs/myhepenv/lib -Wl,-rpath,/nfs/home/tmengel/.conda/envs/myhepenv/lib
