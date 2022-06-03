@@ -1,6 +1,7 @@
 .DS_Store
 ._.DS_Store
 *.root
+*.inc
 
 # Python
 env/
@@ -15,3 +16,5 @@ src/pre-processed-data/*.root
 # Data symlinks
 plotting-macros
 data/jet_trees_raw/*
+working
+data
