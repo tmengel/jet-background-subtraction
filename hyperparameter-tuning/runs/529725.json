@@ -1,0 +1,509 @@
+{
+    "0": {
+        "loss": [
+            3.223318576812744
+        ],
+        "trainable_parms": [
+            4171
+        ],
+        "variables": [
+            [
+                "jet_area",
+                "jet_area",
+                "jet_track_pt_7",
+                "median_pt_over_area",
+                "jet_track_pt_2",
+                "jet_nparts",
+                "median_pt_over_npart",
+                "median_pt_over_area",
+                "jet_track_pt_7",
+                "jet_area",
+                "jet_pt_raw",
+                "median_pt_over_npart",
+                "jet_track_energy_fraction_1"
+            ]
+        ],
+        "nodes": [
+            [
+                278.0
+            ]
+        ]
+    },
+    "1": {
+        "loss": [
+            10.794747352600098
+        ],
+        "trainable_parms": [
+            127877
+        ],
+        "variables": [
+            [
+                "jet_angularity",
+                "median_pt_over_npart",
+                "jet_pt_raw",
+                "jet_track_pt_0",
+                "jet_track_pt_4",
+                "jet_track_pt_4",
+                "jet_track_pt_6"
+            ]
+        ],
+        "nodes": [
+            [
+                343.0,
+                75.0,
+                372.0,
+                190.0
+            ]
+        ]
+    },
+    "2": {
+        "loss": [
+            12.43897533416748
+        ],
+        "trainable_parms": [
+            3171
+        ],
+        "variables": [
+            [
+                "jet_average_track_pt",
+                "jet_track_pt_2",
+                "jet_track_pt_5",
+                "jet_track_deltaR_1",
+                "jet_pt_raw",
+                "jet_track_deltaR_0",
+                "jet_pt_raw",
+                "jet_track_pt_0",
+                "jet_track_pt_1",
+                "jet_angularity"
+            ]
+        ],
+        "nodes": [
+            [
+                5.0,
+                445.0
+            ]
+        ]
+    },
+    "3": {
+        "loss": [
+            289.9189758300781
+        ],
+        "trainable_parms": [
+            17320
+        ],
+        "variables": [
+            [
+                "median_pt_over_npart",
+                "jet_area"
+            ]
+        ],
+        "nodes": [
+            [
+                383.0,
+                42.0
+            ]
+        ]
+    },
+    "4": {
+        "loss": [
+            33.94102478027344
+        ],
+        "trainable_parms": [
+            275121
+        ],
+        "variables": [
+            [
+                "jet_track_energy_fraction_1",
+                "jet_track_pt_7",
+                "jet_track_pt_0",
+                "jet_pt_raw",
+                "jet_angularity",
+                "jet_average_track_pt",
+                "jet_track_pt_0",
+                "jet_track_energy_fraction_0",
+                "jet_track_deltaR_0"
+            ]
+        ],
+        "nodes": [
+            [
+                127.0,
+                202.0,
+                358.0,
+                487.0
+            ]
+        ]
+    },
+    "5": {
+        "loss": [
+            5.893350601196289
+        ],
+        "trainable_parms": [
+            7123
+        ],
+        "variables": [
+            [
+                "jet_track_energy_fraction_0",
+                "jet_pt_raw",
+                "median_pt_over_area",
+                "median_pt_over_npart",
+                "jet_track_pt_1",
+                "median_pt_over_npart",
+                "jet_area"
+            ]
+        ],
+        "nodes": [
+            [
+                164.0,
+                35.0
+            ]
+        ]
+    },
+    "6": {
+        "loss": [
+            122.61384582519531
+        ],
+        "trainable_parms": [
+            2107
+        ],
+        "variables": [
+            [
+                "median_pt_over_area",
+                "jet_track_pt_2",
+                "jet_track_pt_3",
+                "jet_track_pt_2"
+            ]
+        ],
+        "nodes": [
+            [
+                351.0
+            ]
+        ]
+    },
+    "7": {
+        "loss": [
+            16.08119773864746
+        ],
+        "trainable_parms": [
+            95455
+        ],
+        "variables": [
+            [
+                "jet_track_deltaR_1",
+                "jet_pt_raw",
+                "jet_average_track_pt",
+                "jet_track_pt_4",
+                "jet_track_pt_variance",
+                "jet_track_pt_6",
+                "jet_area",
+                "jet_track_pt_variance",
+                "jet_track_deltaR_0",
+                "jet_angularity",
+                "jet_track_pt_1",
+                "jet_track_pt_2",
+                "jet_track_deltaR_0",
+                "jet_track_energy_fraction_0"
+            ]
+        ],
+        "nodes": [
+            [
+                182.0,
+                288.0,
+                138.0
+            ]
+        ]
+    },
+    "8": {
+        "loss": [
+            2.4200615882873535
+        ],
+        "trainable_parms": [
+            8405
+        ],
+        "variables": [
+            [
+                "median_pt_over_npart",
+                "jet_track_pt_3",
+                "jet_track_deltaR_0",
+                "jet_track_pt_6",
+                "jet_track_pt_1",
+                "jet_track_pt_2",
+                "jet_average_track_pt",
+                "jet_area",
+                "jet_track_pt_2",
+                "jet_track_pt_0",
+                "jet_pt_raw",
+                "jet_track_pt_4",
+                "jet_track_deltaR_0",
+                "jet_track_deltaR_1",
+                "jet_track_energy_fraction_1",
+                "jet_track_pt_6",
+                "median_pt_over_npart",
+                "jet_track_pt_5",
+                "jet_track_deltaR_1",
+                "jet_average_track_pt"
+            ]
+        ],
+        "nodes": [
+            [
+                382.0
+            ]
+        ]
+    },
+    "9": {
+        "loss": [
+            51.763484954833984
+        ],
+        "trainable_parms": [
+            321
+        ],
+        "variables": [
+            [
+                "jet_track_pt_7",
+                "jet_angularity",
+                "jet_track_deltaR_0",
+                "jet_track_pt_5",
+                "jet_track_deltaR_0",
+                "jet_average_track_pt"
+            ]
+        ],
+        "nodes": [
+            [
+                40.0
+            ]
+        ]
+    },
+    "10": {
+        "loss": [
+            44.74982452392578
+        ],
+        "trainable_parms": [
+            248971
+        ],
+        "variables": [
+            [
+                "median_pt_over_area",
+                "jet_track_pt_1",
+                "median_pt_over_area",
+                "jet_average_track_pt"
+            ]
+        ],
+        "nodes": [
+            [
+                379.0,
+                256.0,
+                511.0,
+                36.0
+            ]
+        ]
+    },
+    "11": {
+        "loss": [
+            3.9204952716827393
+        ],
+        "trainable_parms": [
+            741
+        ],
+        "variables": [
+            [
+                "jet_track_pt_variance",
+                "jet_track_pt_7",
+                "jet_angularity",
+                "jet_area",
+                "jet_track_energy_fraction_1",
+                "jet_area",
+                "jet_nparts",
+                "jet_track_pt_6",
+                "median_pt_over_npart",
+                "jet_track_pt_7",
+                "median_pt_over_npart",
+                "jet_track_deltaR_0",
+                "jet_track_deltaR_0",
+                "jet_track_pt_7",
+                "jet_track_pt_1",
+                "jet_track_pt_0",
+                "jet_track_energy_fraction_0",
+                "jet_track_pt_6"
+            ]
+        ],
+        "nodes": [
+            [
+                37.0
+            ]
+        ]
+    },
+    "12": {
+        "loss": [
+            54.864051818847656
+        ],
+        "trainable_parms": [
+            2359
+        ],
+        "variables": [
+            [
+                "jet_track_pt_1",
+                "jet_area",
+                "jet_track_pt_variance",
+                "jet_area"
+            ]
+        ],
+        "nodes": [
+            [
+                393.0
+            ]
+        ]
+    },
+    "13": {
+        "loss": [
+            13.393352508544922
+        ],
+        "trainable_parms": [
+            30395
+        ],
+        "variables": [
+            [
+                "jet_track_pt_7",
+                "jet_area",
+                "jet_track_pt_6",
+                "jet_track_pt_3",
+                "jet_track_pt_1",
+                "jet_pt_raw",
+                "jet_track_deltaR_0",
+                "jet_track_energy_fraction_1",
+                "jet_track_pt_0",
+                "jet_track_pt_7",
+                "jet_track_pt_0",
+                "jet_track_deltaR_1"
+            ]
+        ],
+        "nodes": [
+            [
+                167.0,
+                167.0
+            ]
+        ]
+    },
+    "14": {
+        "loss": [
+            2.8886306285858154
+        ],
+        "trainable_parms": [
+            3394
+        ],
+        "variables": [
+            [
+                "jet_track_energy_fraction_0",
+                "jet_track_pt_6",
+                "jet_pt_raw",
+                "jet_track_pt_3",
+                "jet_track_pt_7",
+                "jet_track_deltaR_0",
+                "jet_track_deltaR_1",
+                "jet_track_energy_fraction_1",
+                "jet_track_pt_4",
+                "jet_track_pt_7",
+                "jet_average_track_pt"
+            ]
+        ],
+        "nodes": [
+            [
+                261.0
+            ]
+        ]
+    },
+    "15": {
+        "loss": [
+            35.699825286865234
+        ],
+        "trainable_parms": [
+            108411
+        ],
+        "variables": [
+            [
+                "jet_track_pt_1",
+                "jet_average_track_pt",
+                "jet_pt_raw",
+                "jet_area",
+                "median_pt_over_area",
+                "jet_area",
+                "jet_track_deltaR_0",
+                "jet_track_pt_2"
+            ]
+        ],
+        "nodes": [
+            [
+                337.0,
+                157.0,
+                329.0
+            ]
+        ]
+    },
+    "16": {
+        "loss": [
+            5.728365421295166
+        ],
+        "trainable_parms": [
+            3052
+        ],
+        "variables": [
+            [
+                "jet_track_pt_variance",
+                "jet_area",
+                "jet_track_pt_1",
+                "jet_track_pt_3",
+                "jet_track_pt_7",
+                "jet_nparts",
+                "jet_track_pt_1"
+            ]
+        ],
+        "nodes": [
+            [
+                339.0
+            ]
+        ]
+    },
+    "17": {
+        "loss": [
+            74.32271575927734
+        ],
+        "trainable_parms": [
+            147365
+        ],
+        "variables": [
+            [
+                "jet_track_pt_4",
+                "jet_angularity",
+                "jet_track_pt_3"
+            ]
+        ],
+        "nodes": [
+            [
+                498.0,
+                198.0,
+                101.0,
+                257.0
+            ]
+        ]
+    },
+    "18": {
+        "loss": [
+            1178.83935546875
+        ],
+        "trainable_parms": [
+            195023
+        ],
+        "variables": [
+            [
+                "jet_track_pt_7",
+                "median_pt_over_area"
+            ]
+        ],
+        "nodes": [
+            [
+                224.0,
+                302.0,
+                251.0,
+                199.0
+            ]
+        ]
+    }
+}

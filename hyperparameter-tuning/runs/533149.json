@@ -1,0 +1,229 @@
+{
+    "0": {
+        "loss": [
+            3.605466842651367
+        ],
+        "trainable_parms": [
+            561
+        ],
+        "variables": [
+            [
+                "jet_angularity",
+                "jet_area",
+                "jet_nparts",
+                "jet_pt_raw",
+                "jet_track_pt_0"
+            ]
+        ],
+        "nodes": [
+            [
+                80.0
+            ]
+        ]
+    },
+    "1": {
+        "loss": [
+            3.8149161338806152
+        ],
+        "trainable_parms": [
+            323
+        ],
+        "variables": [
+            [
+                "jet_angularity",
+                "jet_area",
+                "jet_nparts",
+                "jet_pt_raw",
+                "jet_track_pt_0"
+            ]
+        ],
+        "nodes": [
+            [
+                46.0
+            ]
+        ]
+    },
+    "2": {
+        "loss": [
+            9.37161636352539
+        ],
+        "trainable_parms": [
+            4357
+        ],
+        "variables": [
+            [
+                "jet_angularity",
+                "jet_area",
+                "jet_nparts",
+                "jet_pt_raw",
+                "jet_track_pt_0"
+            ]
+        ],
+        "nodes": [
+            [
+                24.0,
+                162.0
+            ]
+        ]
+    },
+    "3": {
+        "loss": [
+            3.5102689266204834
+        ],
+        "trainable_parms": [
+            484
+        ],
+        "variables": [
+            [
+                "jet_angularity",
+                "jet_area",
+                "jet_nparts",
+                "jet_pt_raw",
+                "jet_track_pt_0"
+            ]
+        ],
+        "nodes": [
+            [
+                69.0
+            ]
+        ]
+    },
+    "4": {
+        "loss": [
+            8.805344581604004
+        ],
+        "trainable_parms": [
+            31125
+        ],
+        "variables": [
+            [
+                "jet_angularity",
+                "jet_area",
+                "jet_nparts",
+                "jet_pt_raw",
+                "jet_track_pt_0"
+            ]
+        ],
+        "nodes": [
+            [
+                222.0,
+                133.0
+            ]
+        ]
+    },
+    "5": {
+        "loss": [
+            3.5964834690093994
+        ],
+        "trainable_parms": [
+            449
+        ],
+        "variables": [
+            [
+                "jet_angularity",
+                "jet_area",
+                "jet_nparts",
+                "jet_pt_raw",
+                "jet_track_pt_0"
+            ]
+        ],
+        "nodes": [
+            [
+                64.0
+            ]
+        ]
+    },
+    "6": {
+        "loss": [
+            3.6957919597625732
+        ],
+        "trainable_parms": [
+            512
+        ],
+        "variables": [
+            [
+                "jet_angularity",
+                "jet_area",
+                "jet_nparts",
+                "jet_pt_raw",
+                "jet_track_pt_0"
+            ]
+        ],
+        "nodes": [
+            [
+                73.0
+            ]
+        ]
+    },
+    "7": {
+        "loss": [
+            14.278923034667969
+        ],
+        "trainable_parms": [
+            8333
+        ],
+        "variables": [
+            [
+                "jet_angularity",
+                "jet_area",
+                "jet_nparts",
+                "jet_pt_raw",
+                "jet_track_pt_0"
+            ]
+        ],
+        "nodes": [
+            [
+                153.0,
+                31.0,
+                80.0
+            ]
+        ]
+    },
+    "8": {
+        "loss": [
+            17.90744972229004
+        ],
+        "trainable_parms": [
+            5421
+        ],
+        "variables": [
+            [
+                "jet_angularity",
+                "jet_area",
+                "jet_nparts",
+                "jet_pt_raw",
+                "jet_track_pt_0"
+            ]
+        ],
+        "nodes": [
+            [
+                23.0,
+                80.0,
+                41.0
+            ]
+        ]
+    },
+    "9": {
+        "loss": [
+            8.962494850158691
+        ],
+        "trainable_parms": [
+            11275
+        ],
+        "variables": [
+            [
+                "jet_angularity",
+                "jet_area",
+                "jet_nparts",
+                "jet_pt_raw",
+                "jet_track_pt_0"
+            ]
+        ],
+        "nodes": [
+            [
+                97.0,
+                108.0
+            ]
+        ]
+    }
+}
