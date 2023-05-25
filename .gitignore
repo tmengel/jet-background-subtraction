@@ -1,20 +1,59 @@
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+
+# OS generated files #
+######################
 .DS_Store
-._.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+
+# Slurm logs #
+##############
+*.e*
+*.o*
+
+# ROOT #
+########
 *.root
-*.inc
 
-# Python
-env/
-__pycache__/
-.ipynb_checkpoints
+# HDF5 #
+########
+*.h5
+*.hdf5
 
-# Output
-data/jet_trees_raw/*.root
-data/Makefile.inc
-src/pre-processed-data/*.root
 
-# Data symlinks
-plotting-macros
-data/jet_trees_raw/*
-working
-data
+# Python #
+##########
+*.pyc
+*.pyo
+*.pyd
+**__pycache__/
+*.ipynb_checkpoints/
