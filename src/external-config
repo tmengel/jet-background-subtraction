@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+export EXTERNALDIR=/lustre/isaac/scratch/tmengel/jet-background-subtraction/src/external
+export INSTALLDIR=/lustre/isaac/scratch/tmengel/jet-background-subtraction/src/install
+
+# export ROOTDIR=$EXTERNALDIR/root 
+export FASTJETDIR=$EXTERNALDIR/fastjet-3.4.0
+# export PYTHIADIR=$EXTERNALDIR/pythia8307
+export TENNGENDIR=$EXTERNALDIR/tenngen200
+
+# export ROOTINC=$ROOTDIR/include
+# export ROOTBIN=$ROOTDIR/bin
+# export ROOTLIB=$ROOTDIR/lib
+export ROOTCONFIG=/nfs/home/tmengel/.conda/envs/myhepenv/bin/root-config
+
+export FASTJETBIN=$INSTALLDIR/fastjet/bin
+export FASTLIB=$INSTALLDIR/fastjet/lib
+export FASTINC=$INSTALLDIR/fastjet/include
+export FASTJETCONFIG=$FASTJETBIN/fastjet-config
+
+# export PYTHIA8=$EXTERNALDIR/pythia8307
+export PYTHIALIB=/nfs/home/tmengel/.conda/envs/myhepenv/lib
+export PYTHIAINC=/nfs/home/tmengel/.conda/envs/myhepenv/include
+export PYTHIACONFIG=/nfs/home/tmengel/.conda/envs/myhepenv/bin/pythia8-config
+
+
+# cd $PYTHIADIR
+# ./configure --prefix=$PYTHIA8
+# make
+# make install 
+
+# cd $FASTJETDIR 
+# ./configure --prefix=$INSTALLDIR/fastjet
+# make
+# make install 
+
+cd $TENNGENDIR
+./configure --cxx=g++ --with-root-config=$ROOTCONFIG --with-pythia8-config=$PYTHIACONFIG --with-pythia8-lib=$PYTHIALIB --with-pythia8-include=$PYTHIAINC --with-fastjet3-config=$FASTJETCONFIG --with-fastjet3-lib=$FASTLIB --with-fastjet3-include=$FASTINC --prefix=$INSTALLDIR/tenngen
+
+make
+make install 
