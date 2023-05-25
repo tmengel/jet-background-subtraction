@@ -1,0 +1,16 @@
+{
+    "models": [
+        "SNN",
+        "DNN",
+        "PbPb_R02_SNN",
+        "PbPb_R02_DNN",
+        "AuAu_R06_SNN",
+        "AuAu_R06_DNN",
+        "AuAu_R02_SNN",
+        "AuAu_R02_DNN",
+        "PbPb_R04_SNN",
+        "PbPb_R04_DNN",
+        "PbPb_R06_SNN",
+        "PbPb_R06_DNN"
+    ]
+}

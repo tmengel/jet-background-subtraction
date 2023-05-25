@@ -1,0 +1,18 @@
+{
+    "name": "AuAu_R02_SNN",
+    "type": "snn",
+    "features": [
+        "jet_pt_raw",
+        "jet_nparts",
+        "jet_angularity",
+        "jet_area",
+        "jet_track_pt_0"
+    ],
+    "target": "jet_pt_truth",
+    "path": "/lustre/isaac/scratch/tmengel/jet-background-subtraction/background-subtraction/ml-subtract/models/AuAu_R02_SNN_jet_pt_truth.h5",
+    "trained": true,
+    "loss": "mse",
+    "optimizer": "adam",
+    "epoch": 50,
+    "batch_size": 512
+}
