@@ -1,0 +1,12 @@
+Complexity,Loss,Equation
+1,1790.9047,"-89.54355"
+3,23.639296,"(jet_nparts / -1.7934179)"
+5,4.4623938,"((jet_nparts * -0.6165107) - -11.331706)"
+7,4.4569955,"(((jet_nparts * -0.61656463) - -10.205775) + jet_area)"
+9,4.1697884,"(((jet_nparts * -0.616571) + 12.291815) - (jet_nparts / jet_pt_raw))"
+10,4.0341196,"(((jet_nparts * -0.616571) + 12.291815) - square(jet_nparts / jet_pt_raw))"
+12,3.9409466,"(((jet_nparts * -0.6165123) - square(jet_nparts / (jet_pt_raw - 12.457681))) + 12.451548)"
+14,3.930317,"((((jet_nparts * -0.61645687) - square(jet_nparts / (jet_pt_raw - 12.457681))) - 0.09829066) + 12.451548)"
+16,3.9262607,"(((jet_nparts * -0.61645687) - square((jet_nparts + (1.6887842 / 0.23526637)) / (jet_pt_raw - 12.457681))) + 12.451548)"
+18,3.9254007,"(((jet_nparts * -0.61645687) - square(((jet_nparts + (1.6887842 / 0.23526637)) - jet_area) / (jet_pt_raw - 12.457681))) + 12.451548)"
+20,3.9195974,"(((jet_nparts * -0.61645687) - square((jet_nparts + (1.6887842 / 0.23526637)) / ((jet_pt_raw + (jet_nparts / jet_pt_raw)) - 12.457681))) + 12.451548)"

@@ -1,0 +1,12 @@
+Complexity,Loss,Equation
+1,5.1746745,"-4.0733857"
+3,0.93382305,"(jet_nparts * -0.34767598)"
+5,0.71816677,"((jet_nparts - jet_track_pt_4) * -0.39902318)"
+7,0.5747242,"(((jet_nparts - jet_track_pt_4) + -2.0303981) * -0.47643918)"
+9,0.52442193,"((jet_nparts * -0.4728521) + (1.1730934 - (jet_track_pt_4 * -0.32257342)))"
+12,0.5056346,"((((jet_nparts - 2.3367977) - jet_track_pt_4) * -0.47816432) - (square(jet_track_pt_4) * 0.027067313))"
+14,0.49732825,"((((jet_nparts - jet_track_pt_4) * -0.47971335) + (square(jet_track_pt_4 - jet_track_pt_6) * -0.0649603)) + 1.1218387)"
+15,0.49651432,"((((jet_nparts - 2.3367977) - jet_track_pt_4) * -0.47816432) - ((square(jet_track_pt_4) - square(jet_track_pt_6)) * 0.027067313))"
+16,0.49053937,"((((jet_nparts - jet_track_pt_4) * -0.47971335) + (square((jet_track_pt_4 * 1.3197604) - jet_track_pt_6) * -0.028831791)) + 1.1218387)"
+18,0.48832768,"((((jet_nparts - jet_track_pt_4) * -0.47971335) + (square(((jet_track_pt_4 * 1.3197604) - jet_track_pt_6) + -0.46092764) * -0.028831791)) + 1.1069963)"
+20,0.48813632,"((((jet_nparts - jet_track_pt_4) * -0.47971335) + ((square(((jet_track_pt_4 + -0.71305805) * 1.3197604) - jet_track_pt_6) + jet_track_pt_4) * -0.028831791)) + 1.1218387)"

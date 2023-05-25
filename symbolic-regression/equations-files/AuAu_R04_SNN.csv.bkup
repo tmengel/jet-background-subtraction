@@ -1,0 +1,11 @@
+Complexity,Loss,Equation
+1,51.893658,"-15.263442"
+3,1.4878352,"(jet_nparts * -0.4245462)"
+5,0.5154723,"((jet_nparts * -0.4867154) - -2.6549404)"
+7,0.5135974,"((3.158324 - (jet_nparts * 0.48662913)) - jet_area)"
+8,0.51349854,"(((jet_nparts * -0.48662952) - -2.9089868) - square(jet_area))"
+9,0.48597887,"(((jet_nparts * -0.5102666) - (28.24438 / jet_nparts)) - -4.427916)"
+11,0.4840326,"((jet_nparts * -0.5102134) - (((28.280876 / jet_nparts) + -4.933693) + jet_area))"
+13,0.4839572,"(((jet_nparts * -0.5102666) - ((28.24438 * (jet_area + jet_area)) / jet_nparts)) - -4.427916)"
+15,0.4832057,"((jet_nparts * -0.5102134) - ((((28.280876 / jet_nparts) + square(jet_area)) + -4.933693) + square(jet_area)))"
+19,0.48314545,"(((jet_nparts * -0.5102134) - ((((28.280876 / jet_nparts) + square(jet_area)) + -4.933693) - square(square(0.2864067)))) - square(jet_area))"
