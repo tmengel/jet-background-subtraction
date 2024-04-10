@@ -4,7 +4,9 @@ make clean
 make
 echo "Submitting jobs to jetfind and jetmatch."   
 # modes
-
+for i in {0..24}; do
+    sbatch slurm-batch/jet-job.sh 200 $i 0.4 JetMult -1 1;
+done
 # for i in {0..24}; do
     # sbatch slurm-batch/jet-job.sh 200 $i 0.2 PP -1 1;
     # sbatch slurm-batch/jet-job.sh 200 $i 0.2 FullJets -1 1;
@@ -45,11 +47,11 @@ echo "Submitting jobs to jetfind and jetmatch."
     # sbatch slurm-batch/jet-job.sh 2760 $i 0.4 Fake -1 1;
 # done 
 
-for i in {0..24}; do
+# for i in {0..24}; do
     # sbatch slurm-batch/jet-job.sh 2760 $i 0.6 PP -1 1;
     # sbatch slurm-batch/jet-job.sh 2760 $i 0.6 FullJets -1 1;
     # sbatch slurm-batch/jet-job.sh 2760 $i 0.6 Match -1 1;
-    sbatch slurm-batch/jet-job.sh 2760 $i 0.6 Missed -1 1;
-    sbatch slurm-batch/jet-job.sh 2760 $i 0.6 Fake -1 1;
-done 
+#     sbatch slurm-batch/jet-job.sh 2760 $i 0.6 Missed -1 1;
+#     sbatch slurm-batch/jet-job.sh 2760 $i 0.6 Fake -1 1;
+# done 
 

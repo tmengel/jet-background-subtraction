@@ -145,19 +145,19 @@ Int_t Unfold(const TString matched_file, const TString unmatched_file , const TS
   Float_t max_jet_pT_truth = GetMaxPt(truth_variable, matched_file);
   // if (max_jet_pT_truth > 300) max_jet_pT_truth = 300;
 
-  Float_t truth_bin_width = GetBinWidth(truth_variable, matched_file);
+  Float_t truth_bin_width = 5.0;// GetBinWidth(truth_variable, matched_file);
   Int_t n_truth_bins = Int_t((max_jet_pT_truth-min_jet_pT_truth)/truth_bin_width) + 1;
   max_jet_pT_truth = (n_truth_bins*truth_bin_width) + min_jet_pT_truth;
-  Float_t measured_binwidth_constant = GetBinWidth(target_variables[0], matched_file);
+  Float_t measured_binwidth_constant =5.0; // GetBinWidth(target_variables[0], matched_file);
 
   for(Int_t imodel=0; imodel<models.size(); imodel++){
       cout << "Model = " << models[imodel] << endl;
       // measurement binning
       sigma_delta_pT[imodel] = GetSigmaPt(target_variables[imodel], truth_variable, matched_file);
-      min_jet_pT_measurement[imodel] = GetMinPt(target_variables[imodel], matched_file);
+      min_jet_pT_measurement[imodel] =  GetMinPt(target_variables[imodel], matched_file);
       //5.0*sigma_delta_pT[imodel];
       //GetMinPt(target_variables[imodel], matched_file);
-      max_jet_pT_measurement[imodel] = max_jet_pT_truth;//90.0; //GetMaxPt(target_variables[imodel], matched_file);
+      max_jet_pT_measurement[imodel] = GetMaxPt(target_variables[imodel], matched_file); // max_jet_pT_truth;//90.0; //GetMaxPt(target_variables[imodel], matched_file);
       // if (max_jet_pT_measurement[imodel] > 300) max_jet_pT_measurement[imodel] = 300;
 
       measurement_bin_width[imodel] = measured_binwidth_constant; //GetBinWidth(target_variables[imodel], matched_file);
@@ -258,29 +258,41 @@ Int_t Unfold(const TString matched_file, const TString unmatched_file , const TS
   cout << "Matched file: " << matched_file << endl;
   TTree *matchedtree = (TTree*)matched->Get("tree");
   Float_t jet_pt_truth, jet_pt_area, jet_pt_mult, jet_pt_dnn, jet_pt_snn;
+  Float_t jet_track_pt_0_truth;
   matchedtree->SetBranchAddress(truth_variable, &jet_pt_truth);
   matchedtree->SetBranchAddress(target_variables[0], &jet_pt_area);
   matchedtree->SetBranchAddress(target_variables[1], &jet_pt_mult);
   matchedtree->SetBranchAddress(target_variables[2], &jet_pt_dnn);
   matchedtree->SetBranchAddress(target_variables[3], &jet_pt_snn);
+  matchedtree->SetBranchAddress("jet_track_pt_0", &jet_track_pt_0_truth);
+
 
   for(Int_t i=0; i<matchedtree->GetEntries(); i++){
 
       matchedtree->GetEntry(i);
-    
-      // fill response
-      response_area.Fill(jet_pt_area, jet_pt_truth);
-      response_mult.Fill(jet_pt_mult, jet_pt_truth);
-      response_dnn.Fill(jet_pt_dnn, jet_pt_truth);
-      response_snn.Fill(jet_pt_snn, jet_pt_truth);
 
-      //fill truth histograms
-      //h_truth->Fill(jet_pt_truth);
-      h_truth->Fill(jet_pt_truth);
-      h_truth_measurement_area_bins->Fill(jet_pt_truth);
-      h_truth_measurement_mult_bins->Fill(jet_pt_truth);
-      h_truth_measurement_dnn_bins->Fill(jet_pt_truth);
-      h_truth_measurement_snn_bins->Fill(jet_pt_truth);
+      
+      // fill response
+      // if(jet_track_pt_0_truth > 7.0){
+        response_area.Fill(jet_pt_area, jet_pt_truth);
+        response_mult.Fill(jet_pt_mult, jet_pt_truth);
+        response_dnn.Fill(jet_pt_dnn, jet_pt_truth);
+        response_snn.Fill(jet_pt_snn, jet_pt_truth);
+
+        h_truth->Fill(jet_pt_truth);
+        h_truth_measurement_area_bins->Fill(jet_pt_truth);
+        h_truth_measurement_mult_bins->Fill(jet_pt_truth);
+        h_truth_measurement_dnn_bins->Fill(jet_pt_truth);
+        h_truth_measurement_snn_bins->Fill(jet_pt_truth);
+      // }
+
+      // if(jet_track_pt_0_truth < 5.0){
+      //   //fill missed response
+      //   response_area.Miss(jet_pt_truth);
+      //   response_mult.Miss(jet_pt_truth);
+      //   response_dnn.Miss(jet_pt_truth);
+      //   response_snn.Miss(jet_pt_truth);
+      // }
 
   }
 
@@ -309,14 +321,17 @@ Int_t Unfold(const TString matched_file, const TString unmatched_file , const TS
   cout << "Fake file: " << fake_file << endl;
   TTree *faketree = (TTree*)fake->Get("tree");
   Float_t jet_pt_area_fake, jet_pt_mult_fake, jet_pt_dnn_fake, jet_pt_snn_fake;
+  Float_t jet_track_pt_0_fake;
   faketree->SetBranchAddress(target_variables[0], &jet_pt_area_fake);
   faketree->SetBranchAddress(target_variables[1], &jet_pt_mult_fake);
   faketree->SetBranchAddress(target_variables[2], &jet_pt_dnn_fake);
   faketree->SetBranchAddress(target_variables[3], &jet_pt_snn_fake);
+  faketree->SetBranchAddress("jet_track_pt_0", &jet_track_pt_0_fake);
 
   for (Int_t i = 0; i < faketree->GetEntries(); i++)
   {
       faketree->GetEntry(i);
+      // if(jet_track_pt_0_fake < 7.0) continue; // cut on leading track pT
       // fill fake response
       response_area.Fake(jet_pt_area_fake);
       response_mult.Fake(jet_pt_mult_fake);
@@ -331,15 +346,18 @@ Int_t Unfold(const TString matched_file, const TString unmatched_file , const TS
   cout << "Unmatched file: " << unmatched_file << endl;
   TTree *unmatchedtree = (TTree*)unmatched->Get("tree");
   Float_t jet_pt_area_unmatched, jet_pt_mult_unmatched, jet_pt_dnn_unmatched, jet_pt_snn_unmatched;
+  Float_t jet_track_pt_0_unmatched;
   unmatchedtree->SetBranchAddress(target_variables[0], &jet_pt_area_unmatched);
   unmatchedtree->SetBranchAddress(target_variables[1], &jet_pt_mult_unmatched);
   unmatchedtree->SetBranchAddress(target_variables[2], &jet_pt_dnn_unmatched);
   unmatchedtree->SetBranchAddress(target_variables[3], &jet_pt_snn_unmatched);
+  unmatchedtree->SetBranchAddress("jet_track_pt_0", &jet_track_pt_0_unmatched);
 
   for ( Int_t i = 0; i < unmatchedtree->GetEntries(); i++)
   {
       unmatchedtree->GetEntry(i);
       // fill measurement histograms
+      //if(jet_track_pt_0_unmatched < 7.0) continue; // cut on leading track pT
       measurement_area_reco->Fill(jet_pt_area_unmatched);
       measurement_mult_reco->Fill(jet_pt_mult_unmatched);
       measurement_dnn_reco->Fill(jet_pt_dnn_unmatched);

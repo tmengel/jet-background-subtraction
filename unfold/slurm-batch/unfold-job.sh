@@ -2,7 +2,7 @@
 #SBATCH -J unfoldJob			       #The name of the job
 #SBATCH -A ACF-UTK0019              # The project account to be charged
 #SBATCH --nodes=1                    # Number of nodes
-#SBATCH --ntasks-per-node=8          # cpus per node 
+#SBATCH --ntasks-per-node=1          # cpus per node 
 #SBATCH --partition=condo-cnattras          
 #SBATCH --time=0-12:00:00             # Wall time (days-hh:mm:ss)
 #SBATCH --error=/lustre/isaac/scratch/tmengel/jet-background-subtraction/unfold/slurm-batch/slurm-err/unfoldJob.e%J	     

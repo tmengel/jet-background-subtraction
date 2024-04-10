@@ -201,6 +201,209 @@ void PythiaJets(const TString input_file, const TString output_file, const struc
     cout << "Number of jets: " << nJets_Total << endl;
 }
 
+void JetsForTrackMult(const TString input_file_pythia, const TString input_file_tenngen, const TString output_file, const Int_t centbin, const struct JetFindingParameters jetparams){ 
+    
+    cout << "Starting JetsForTrackMult()" << endl;
+    cout << "Input pythia file: " << input_file_pythia << endl;
+    cout << "Input TennGen file: " << input_file_tenngen << endl;
+    cout << "Output file: " << output_file << endl;
+    cout << "Jet param: " << jetparams.jetparam << endl;
+    cout << "Starting event: " << jetparams.start_mixed_events.at(centbin) << endl;
+    cout << "Total events: " << jetparams.n_mixed_events.at(centbin) << endl;
+
+
+    // open input file
+    TFile pythia_file(input_file_pythia.Data());
+    TFile tenngen_file(input_file_tenngen.Data());
+    if(!pythia_file.IsOpen()){  cout << "PYTHIA file not open" << endl; exit(1); }
+    if(!tenngen_file.IsOpen()){  cout << "TennGen file not open" << endl; exit(1); }
+    
+    TString partTree = "tree";
+    TString eventTree = "eventInfo";
+    TTreeReader pythia_parts(partTree.Data(), &pythia_file);
+    TTreeReader pythia_event(eventTree.Data(), &pythia_file);
+    TTreeReaderValue<Int_t> pythia_nevent(pythia_event, "nevent");
+    TTreeReaderValue<Float_t> pythia_ptmax(pythia_event, "ptmin");
+    TTreeReaderValue<Float_t> pythia_ptmin(pythia_event, "ptmax");
+    TTreeReaderValue<Int_t> pythia_ptbin(pythia_event, "ptbinID");
+    TTreeReaderValue<Float_t> pythia_xsec(pythia_event, "xsec_over_eventweight");
+    TTreeReaderValue<Float_t> pythia_weight(pythia_parts, "weight");
+    TTreeReaderValue<Int_t> pythia_numparts(pythia_parts, "nparts");
+    TTreeReaderArray<Float_t> pythia_px(pythia_parts, "particle_px");
+    TTreeReaderArray<Float_t> pythia_py(pythia_parts, "particle_py");
+    TTreeReaderArray<Float_t> pythia_pz(pythia_parts, "particle_pz");
+    TTreeReaderArray<Float_t> pythia_E(pythia_parts, "particle_e");
+    //////////////////////////////////////////////////////////////
+    TTreeReader tenngen_parts(partTree.Data(), &tenngen_file);
+    TTreeReaderValue<Int_t> tenngen_numparts(tenngen_parts, "nparts");
+    TTreeReaderArray<Float_t> tenngen_px(tenngen_parts, "particle_px");
+    TTreeReaderArray<Float_t> tenngen_py(tenngen_parts, "particle_py");
+    TTreeReaderArray<Float_t> tenngen_pz(tenngen_parts, "particle_pz");
+    TTreeReaderArray<Float_t> tenngen_E(tenngen_parts, "particle_e");
+    // check if the trees are empty
+    if(!pythia_event.Next()){  cout << "PYTHIA tree is empty" << endl; exit(1); }
+    if(!tenngen_parts.Next()){ cout << "TennGen tree is empty" << endl; exit(1); }
+    //////////////////////// Create output file //////////////////////////
+
+    const Int_t MAX_TRACKS= 250;
+    Int_t event_cent_bin;
+    Int_t event_pt_hard_bin;
+    Float_t event_weight;
+    Float_t jet_pt_raw;
+    Float_t jet_pt_pythia;
+    Int_t jet_nparts_pythia, jet_nparts;
+    Float_t jet_track_pt[MAX_TRACKS] = {0};
+    Float_t jet_pythia_tracks_pt[MAX_TRACKS] = {0};
+    ////////////////////////////////////////////////////////////////////////////////
+    // Output file
+    TFile *fout = new TFile(output_file.Data(), "RECREATE");
+    TTree *outTree = new TTree("tree", "tree");
+    outTree->Branch("event_cent_bin", &event_cent_bin, "event_cent_bin/I");
+    outTree->Branch("event_pt_hard_bin", &event_pt_hard_bin, "event_pt_hard_bin/I");
+    outTree->Branch("event_weight", &event_weight, "event_weight/F");
+    outTree->Branch("jet_pt_raw", &jet_pt_raw, "jet_pt_raw/F");
+    outTree->Branch("jet_pt_pythia", &jet_pt_pythia, "jet_pt_pythia/F");
+    outTree->Branch("jet_nparts", &jet_nparts, "jet_nparts/I");
+    outTree->Branch("jet_nparts_pythia", &jet_nparts_pythia, "jet_nparts_pythia/I");
+    outTree->Branch("jet_track_pt", jet_track_pt, "jet_track_pt[jet_nparts]/F");
+    outTree->Branch("jet_pythia_tracks_pt", jet_pythia_tracks_pt, "jet_pythia_tracks_pt[jet_nparts_pythia]/F");
+   
+    ////////////////////////////////////////////////////////////////////////////////
+    // loop over events
+    // Get pythia event info
+
+    event_cent_bin = centbin;
+    event_pt_hard_bin = *pythia_ptbin;
+    Float_t pythia_xsec_over_eventweight = *pythia_xsec;
+    Int_t pythia_nevents = *pythia_nevent;
+
+    // Initialize event counters
+    
+    Int_t event_number = 0;
+
+    std::vector<fastjet::PseudoJet> particles;
+    std::vector<fastjet::PseudoJet> jets;
+    std::vector<fastjet::PseudoJet> constituents;
+    Float_t antikt_jet_abs_eta_max = jetparams.particle_max_eta-jetparams.jetparam;
+    fastjet::GhostedAreaSpec ghost_area_spec(jetparams.particle_max_eta);
+    fastjet::JetDefinition kt_jet_def(fastjet::kt_algorithm, 0.4);
+
+    // skip pythia events before start_event
+    for (Int_t ievent = 0; ievent < jetparams.start_mixed_events.at(centbin); ievent++)
+    { 
+        if(!pythia_parts.Next()){ cout << "Reached end of pythia file at event " << ievent << endl; exit(1);}
+    }
+    Int_t nEvents_processed = 0;
+    Int_t nJets_total = 0;
+    for(Int_t ievent = 0; ievent < jetparams.n_mixed_events.at(centbin); ievent++){
+            if(!tenngen_parts.Next()){ cout << "Reached end of tenngen file" << endl; break;}
+            if(!pythia_parts.Next()){ cout << "Reached end of pythia file" << endl; break;}
+          
+            //clear vectors
+            particles.clear();
+            jets.clear();
+            constituents.clear();
+            ////////////////////////////////////////////////////////////////////////////////
+            // Fill the tree
+            Int_t nParts_pythia = *pythia_numparts;
+            Int_t nParts_tenngen = *tenngen_numparts;
+            Int_t nParts_total=0;
+            // Get event weight
+            event_weight = *pythia_weight;
+            event_weight *= pythia_xsec_over_eventweight;
+            // Get particle info
+         
+            for(Int_t ipart = 0; ipart < nParts_pythia; ipart++){   
+
+                PseudoJet particle_temp(pythia_px[ipart], pythia_py[ipart], pythia_pz[ipart], pythia_E[ipart]);
+                if(particle_temp.pt() < 0.15) continue;
+                if(TMath::Abs(particle_temp.eta()) > jetparams.particle_max_eta) continue;
+                if(particle_temp.px() == 0 && particle_temp.py() == 0 && particle_temp.pz() == 0 && particle_temp.E() == 0) continue;
+                particles.push_back(particle_temp);
+                particles.at(nParts_total).set_user_index(1);
+                nParts_total++;
+
+            }
+            for(Int_t ipart = 0; ipart < nParts_tenngen; ipart++){
+                
+                PseudoJet particle_temp(tenngen_px[ipart], tenngen_py[ipart], tenngen_pz[ipart], tenngen_E[ipart]);
+                if(particle_temp.pt() < 0.15) continue;
+                if(TMath::Abs(particle_temp.eta()) > jetparams.particle_max_eta) continue;
+                if(particle_temp.px() == 0 && particle_temp.py() == 0 && particle_temp.pz() == 0 && particle_temp.E() == 0) continue;
+                particles.push_back(particle_temp);
+                particles.at(nParts_total).set_user_index(0);
+                nParts_total++;
+
+            }
+            
+            ////////////////////////////////////////////////////////////////////////////////
+            // find antikt jets
+            fastjet::AreaDefinition area_def(fastjet::active_area, ghost_area_spec);  
+            fastjet::JetDefinition antikt_jet_def(fastjet::antikt_algorithm, jetparams.jetparam);
+            fastjet::ClusterSequenceArea antikt_cs(particles, antikt_jet_def, area_def);
+            jets = antikt_cs.inclusive_jets(jetparams.jet_pt_min);
+
+            // loop over antikt jets
+            Int_t n_antikt_jets = jets.size();
+            for(Int_t ijet = 0; ijet < n_antikt_jets; ijet++){
+
+                if(!jets[ijet].has_area()) continue;
+                if(jets[ijet].constituents().size() == 0) continue;
+                if(jets[ijet].pt() < jetparams.jet_pt_min) continue;
+                if(TMath::Abs(jets[ijet].eta()) > antikt_jet_abs_eta_max) continue;
+
+                constituents.clear();
+                constituents = sorted_by_pt(jets[ijet].constituents());
+                Int_t n_constituents = constituents.size();
+
+                jet_pt_raw = jets[ijet].pt();
+                jet_pt_pythia = 0;
+                jet_nparts = 0;
+                jet_nparts_pythia = 0;
+                for(Int_t ipart =0; ipart< n_constituents; ipart++){
+                    if(constituents[ipart].user_index() == 1 || constituents[ipart].user_index() == 0){
+                        jet_track_pt[jet_nparts] = constituents[ipart].pt();
+                        jet_nparts++;
+                    }
+                    if(constituents[ipart].user_index() == 1){
+                        jet_pythia_tracks_pt[jet_nparts_pythia] = constituents[ipart].pt();
+                        jet_nparts_pythia++;
+                        jet_pt_pythia += constituents[ipart].pt();
+                    }
+                }
+
+
+                if(jet_nparts == 0) continue;
+                if(jet_nparts_pythia ==0 ) continue;
+                if(jet_pt_pythia < jetparams.jet_pt_min) continue;
+                // if(jet_pt_pythia < jet) continue;
+                
+                outTree->Fill();
+                constituents.clear();
+                //clear track pt array
+                for(Int_t i = 0; i < jet_nparts; i++){
+                    jet_track_pt[i] = 0;
+                }
+                for(Int_t i = 0; i < jet_nparts_pythia; i++){
+                    jet_pythia_tracks_pt[i] = 0;
+                }
+            }
+            
+
+            nEvents_processed++;
+            jets.clear();
+            particles.clear();
+             
+    }//end of event/cent loop
+    fout->Write();
+    fout->Close();
+    tenngen_file.Close();
+    pythia_file.Close();
+
+    cout << "nEvents_processed: " << nEvents_processed << endl;
+    cout << "nJets_total: " << nJets_total << endl;
+}
+
 void Jets(const TString input_file_pythia, const TString input_file_tenngen, const TString output_file, const Int_t centbin, const struct JetFindingParameters jetparams){ 
     
     cout << "Starting Jets()" << endl;
@@ -1409,7 +1612,7 @@ void Usage(){
     cout << "collen: 200 or 2760" << endl;
     cout << "ptbin: 0-24" << endl;
     cout << "jetparam: 0.2-0.6" << endl;
-    cout << "mode: PP, FullJets, Match" << endl;
+    cout << "mode: PP, FullJets, Match, JetMult" << endl;
     cout << "nevent: -1 for all events" << endl;
     cout << "verbose: 0 for limited output, 1 for debug output" << endl;
     exit(0);
@@ -1440,7 +1643,7 @@ void InitJetAnalysis(Int_t argc, Char_t** argv,  struct Args &args){
         cout << "Invalid jetparam: " << args.jetparam << endl;
         Usage();
     }
-    if(args.mode != "PP" && args.mode != "FullJets" && args.mode != "Match" && args.mode != "Missed" && args.mode != "Fake"){
+    if(args.mode != "PP" && args.mode != "FullJets" && args.mode != "Match" && args.mode != "Missed" && args.mode != "Fake" && args.mode != "JetMult"){
         cout << "Invalid mode: " << args.mode << endl;
         Usage();
     }
@@ -1592,6 +1795,7 @@ Int_t main(Int_t argc, Char_t** argv){
             else if( args.mode == "Match" ) JetMatch(config.pythia_filename, config.tenngen_filenames.at(icent), config.output_filenames.at(icent), icent, params);
             else if( args.mode == "Missed" ) MissedPythiaJets(config.pythia_filename, config.tenngen_filenames.at(icent), config.output_filenames.at(icent), icent, params);
             else if( args.mode == "Fake" ) UnmatchedJets(config.pythia_filename, config.tenngen_filenames.at(icent), config.output_filenames.at(icent), icent, params);
+            else if( args.mode == "JetMult")  JetsForTrackMult(config.pythia_filename, config.tenngen_filenames.at(icent), config.output_filenames.at(icent), icent, params);
         }
 
         TChain *out_chain = new TChain("tree");
