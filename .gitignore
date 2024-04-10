@@ -58,3 +58,7 @@ Thumbs.db
 *.pyd
 **__pycache__/
 *.ipynb_checkpoints/
+
+# TennGen #
+###########
+/src/external/tenngen200
